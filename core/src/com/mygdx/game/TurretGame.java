@@ -8,19 +8,28 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class TurretGame extends Game {
-    public static final int PIXPERMETER = 32;
+/**
+ * things to play with:
+ * TmxMapLoader, OrthogonalTiledMapRenderer, and TiledMap
+ * OrthographicCamera & Viewport
+ * TextureAtlas
+ * Sprite
+ */
 
-	private Screen gameScreen;
+public class TurretGame extends Game {
+//    public static final int PIXPERMETER = 32;
+
+	//private Screen gameScreen;
     public SpriteBatch batch;
 
 	@Override
     public void create () {
         batch = new SpriteBatch();
-        gameScreen = new Screen2d(this);
-        setScreen(gameScreen);
+        //gameScreen = new Screen2d(this);
+        setScreen(new Screen2d(this));
     }
 
+    //super.render() calls a method that TurretGame inherits when because it extends Game.
 	@Override
 	public void render () {
 		super.render();
