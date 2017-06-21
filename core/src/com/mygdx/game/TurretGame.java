@@ -16,6 +16,8 @@ public class TurretGame extends ApplicationAdapter {
 		img = new Texture("badlogic.jpg");
 	}
 
+	//test push change
+
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
