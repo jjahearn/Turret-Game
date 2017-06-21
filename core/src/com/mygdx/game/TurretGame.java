@@ -18,6 +18,8 @@ public class TurretGame extends ApplicationAdapter {
 
 	//test push change
 
+	//drinking from gradle stew from my ladle
+
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
