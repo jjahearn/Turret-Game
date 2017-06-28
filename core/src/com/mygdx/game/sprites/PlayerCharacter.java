@@ -28,7 +28,7 @@ public class PlayerCharacter extends Sprite {
         stayOnScreen();
         if (getRotation() >= 360.0f) rotate(-360.0f);
         if (getRotation() < 0.0f) rotate(360.0f);
-        Gdx.app.log(heading + " ", " " + getRotation());
+
     }
 
     private void stayOnScreen() {
@@ -74,8 +74,8 @@ public class PlayerCharacter extends Sprite {
             setRotation((heading));
             return;
         }
-        if (getRotation() < heading && heading - getRotation() < 180) adjustedRotationSpeed *= -1.0f;
-        if (getRotation() > heading && getRotation() - heading > 180) adjustedRotationSpeed *= -1.0f;
+        if (getRotation() < heading && Math.abs(heading - getRotation()) < 180) adjustedRotationSpeed *= -1.0f;
+        if (getRotation() > heading && Math.abs(getRotation() - heading) > 180) adjustedRotationSpeed *= -1.0f;
         rotate(adjustedRotationSpeed);
     }
 }
