@@ -10,7 +10,7 @@ import com.mygdx.game.screens.WorldScreen;
 
 public class PlayerCharacter extends Sprite {
     private static final float MOVE_SPEED = 250.0f;
-    private static final float ROTATION_SPEED = 170.0f;
+    private static final float ROTATION_SPEED = 130.0f;
 
     private WorldScreen screen;
     private float heading;
@@ -69,14 +69,13 @@ public class PlayerCharacter extends Sprite {
     }
 
     private void rotateToHeading(float dt){
-        float adjustedRotationSpeed = ROTATION_SPEED * dt;
-        if (Math.abs(getRotation() - heading) < adjustedRotationSpeed) {
-            adjustedRotationSpeed = Math.abs(getRotation() - heading);
+        float adjustedRotationSpeed = -ROTATION_SPEED * dt;
+        if (Math.abs(getRotation() - heading) < 4) {
+            setRotation((heading));
+            return;
         }
-
-        //buggy
-        float inverseHeading = (heading - 180.0f) % 360.0f;
-        if (getRotation() > heading || getRotation() < inverseHeading) adjustedRotationSpeed *= -1.0f;
+        if (getRotation() < heading && heading - getRotation() < 180) adjustedRotationSpeed *= -1.0f;
+        if (getRotation() > heading && getRotation() - heading > 180) adjustedRotationSpeed *= -1.0f;
         rotate(adjustedRotationSpeed);
     }
 }
