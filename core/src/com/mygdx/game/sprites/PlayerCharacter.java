@@ -73,6 +73,8 @@ public class PlayerCharacter extends Sprite {
         if (Math.abs(getRotation() - heading) < adjustedRotationSpeed) {
             adjustedRotationSpeed = Math.abs(getRotation() - heading);
         }
+
+        //buggy
         float inverseHeading = (heading - 180.0f) % 360.0f;
         if (getRotation() > heading || getRotation() < inverseHeading) adjustedRotationSpeed *= -1.0f;
         rotate(adjustedRotationSpeed);
