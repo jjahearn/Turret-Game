@@ -69,13 +69,13 @@ public class PlayerCharacter extends Sprite {
     }
 
     private void rotateToHeading(float dt){
-        float adjustedRotationSpeed = -ROTATION_SPEED * dt;
-        if (Math.abs(getRotation() - heading) < 4) {
+        float adjustedRotationSpeed = ROTATION_SPEED * dt;
+        if (Math.abs(getRotation() - heading) < adjustedRotationSpeed) {
             setRotation((heading));
             return;
         }
-        if (getRotation() < heading && Math.abs(heading - getRotation()) < 180) adjustedRotationSpeed *= -1.0f;
-        if (getRotation() > heading && Math.abs(getRotation() - heading) > 180) adjustedRotationSpeed *= -1.0f;
+        if (getRotation() > heading && Math.abs(heading - getRotation()) < 180) adjustedRotationSpeed *= -1.0f;
+        if (getRotation() < heading && Math.abs(getRotation() - heading) > 180) adjustedRotationSpeed *= -1.0f;
         rotate(adjustedRotationSpeed);
     }
 }
