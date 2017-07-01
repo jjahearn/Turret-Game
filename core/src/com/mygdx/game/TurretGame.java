@@ -4,18 +4,11 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-/**
- * things to play with:
- * TmxMapLoader, OrthogonalTiledMapRenderer, and TiledMap
- * OrthographicCamera & Viewport
- * TextureAtlas
- * Sprite
- */
+import com.mygdx.game.screens.WorldScreen;
 
 public class TurretGame extends Game {
-    public static final int SCREENWIDTH = 1280;
-    public static final int SCREENHEIGHT = 800;
+    public static final int SCREENWIDTH = 768;
+    public static final int SCREENHEIGHT = 480;
 
     public static boolean debug;
     public SpriteBatch batch;
@@ -27,7 +20,7 @@ public class TurretGame extends Game {
         debug = false;
         assets = new AssetManager();
         loadAssets();
-        setScreen(new com.mygdx.game.screens.WorldScreen(this));
+        setScreen(new WorldScreen(this));
     }
 
     public void loadAssets(){

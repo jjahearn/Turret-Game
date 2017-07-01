@@ -9,8 +9,8 @@ import com.mygdx.game.screens.WorldScreen;
 
 
 public class PlayerCharacter extends Sprite {
-    private static final float MOVE_SPEED = 250.0f;
-    private static final float ROTATION_SPEED = 130.0f;
+    private static final float MOVE_SPEED = 350.0f;
+    private static final float ROTATION_SPEED = 230.0f;
 
     private WorldScreen screen;
     private float heading;
