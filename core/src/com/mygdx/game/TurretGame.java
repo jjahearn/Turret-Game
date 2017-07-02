@@ -17,7 +17,7 @@ public class TurretGame extends Game {
         debug = false;
         setScreen(new WorldScreen(this));
     }
-//
+
     //indirectly calls the render() method of our current screen
 	@Override
 	public void render () {
