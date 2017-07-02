@@ -9,17 +9,17 @@ import com.mygdx.game.screens.WorldScreen;
 
 
 public class PlayerCharacter extends Sprite {
-    private static final float MOVE_SPEED = 350.0f;
+    private static final float MOVE_SPEED = 250.0f;
     private static final float ROTATION_SPEED = 230.0f;
 
     private WorldScreen screen;
     private float heading;
 
     public PlayerCharacter(WorldScreen screen){
-        super(screen.getAssets().get("playerplaceholder.png", Texture.class));
+        super(new Texture("playerplaceholder.png"));
         this.screen = screen;
         setOriginCenter();
-        setPosition(600,400);
+        setPosition(352,288);
         setRotation(360);
     }
 

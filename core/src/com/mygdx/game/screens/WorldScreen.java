@@ -3,7 +3,6 @@ package com.mygdx.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -42,7 +41,7 @@ public class WorldScreen implements Screen {
         Gdx.app.log("dimensions", viewport.getWorldWidth() + " : "+ viewport.getWorldHeight());
 
         player = new PlayerCharacter(this);
-        Texture img = game.assets.get("frogs.png");
+        Texture img = new Texture("frogs.png");
         frogBall = new Sprite(img);
 
         mapLoader = new TmxMapLoader();
@@ -50,10 +49,6 @@ public class WorldScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map);
 
         camera.position.set(viewport.getWorldWidth()/2, viewport.getWorldHeight()/2, 0);
-    }
-
-    public AssetManager getAssets(){
-        return game.assets;
     }
 
     @Override
