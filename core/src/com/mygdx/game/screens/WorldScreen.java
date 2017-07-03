@@ -3,7 +3,6 @@ package com.mygdx.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,13 +13,13 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.TurretGame;
+import com.mygdx.game.UI.Debug;
 import com.mygdx.game.sprites.PlayerCharacter;
 
 
 public class WorldScreen implements Screen {
     private TurretGame game;
     private PlayerCharacter player;
-    private Sprite frogBall;
 
     private OrthographicCamera camera;
     private Viewport viewport;
@@ -29,20 +28,18 @@ public class WorldScreen implements Screen {
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
 
-    private FPSLogger fpsLogger;
+    private Debug debugView;
 
     //takes game as an argument in order to interact with our singleton spritebatch object
     public WorldScreen(TurretGame game){
         this.game = game;
-        fpsLogger = new FPSLogger();
+        debugView = new Debug(game.batch);
 
         camera = new OrthographicCamera();
         viewport = new FitViewport(TurretGame.SCREENWIDTH, TurretGame.SCREENHEIGHT, camera);
         Gdx.app.log("dimensions", viewport.getWorldWidth() + " : "+ viewport.getWorldHeight());
 
         player = new PlayerCharacter(this);
-        Texture img = new Texture("frogs.png");
-        frogBall = new Sprite(img);
 
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("testmap.tmx");
@@ -73,6 +70,11 @@ public class WorldScreen implements Screen {
 //        frogBall.draw(game.batch);
         player.draw(game.batch);
         game.batch.end();
+
+        if (TurretGame.debug){
+            game.batch.setProjectionMatrix(debugView.stage.getCamera().combined);
+            debugView.stage.draw();
+        }
     }
 
     //main logic for this screen. move things, handle input.
@@ -82,7 +84,9 @@ public class WorldScreen implements Screen {
         camera.update();
         renderer.setView(camera);
 
-        if (TurretGame.debug) fpsLogger.log();
+        if (TurretGame.debug){
+            debugView.update(dt);
+        }
     }
 
 
@@ -92,7 +96,7 @@ public class WorldScreen implements Screen {
                 Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT)) &&
                 Gdx.input.isKeyJustPressed(Input.Keys.D)){
             TurretGame.debug = !TurretGame.debug;
-            Gdx.app.log("debug state ", "changed");
+            Gdx.app.log("debug state ", "" + TurretGame.debug);
         }
     }
 
@@ -121,5 +125,6 @@ public class WorldScreen implements Screen {
     public void dispose() {
         map.dispose();
         renderer.dispose();
+        debugView.dispose();
     }
 }
