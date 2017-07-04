@@ -5,22 +5,22 @@ package com.mygdx.game;
  */
 
 public class SaveData{ //will most likely implement serializable
-    private int currency;
+    private int coinys;
 
     public boolean save(){
         //save to file
         return false;
     }
 
-    public int getCurrency() {
-        return currency;
+    public int getCoinys() {
+        return coinys;
     }
 
-    public void addCurrency(int amount) {
-        this.currency += amount;
+    public void addCoinys(int amount) {
+        this.coinys += amount;
     }
 
     public SaveData(){
-        currency = 0;
+        coinys = 0;
     }
 }
