@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.StringBuilder;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -41,8 +42,9 @@ public class Debug implements Disposable {
 
     }
 
-    public void update(float delta){
+    public void update(){
         log("fps", Gdx.graphics.getFramesPerSecond());
+
     }
 
     private static void add(String name, String value){

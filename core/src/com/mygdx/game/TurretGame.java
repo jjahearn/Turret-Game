@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.screens.WorldScreen;
 
 public class TurretGame extends Game {
-    public static final int SCREENWIDTH = 768;
-    public static final int SCREENHEIGHT = 480;
+    public static final int SCREEN_WIDTH = 768;
+    public static final int SCREEN_HEIGHT = 480;
 
     public static boolean debug;
     public SpriteBatch batch;

@@ -38,9 +38,9 @@ public class PlayerCharacter extends Sprite {
 
     private void stayOnScreen() {
         if (getX() < 0) setX(0);
-        if (getX() > TurretGame.SCREENWIDTH - getWidth()) setX(TurretGame.SCREENWIDTH - getWidth());
+        if (getX() > TurretGame.SCREEN_WIDTH - getWidth()) setX(TurretGame.SCREEN_WIDTH - getWidth());
         if (getY() < 0) setY(0);
-        if (getY() > TurretGame.SCREENHEIGHT - getHeight()) setY(TurretGame.SCREENHEIGHT - getHeight());
+        if (getY() > TurretGame.SCREEN_HEIGHT - getHeight()) setY(TurretGame.SCREEN_HEIGHT - getHeight());
     }
 
     private void handleInput(){
@@ -49,8 +49,9 @@ public class PlayerCharacter extends Sprite {
         heading = -1.0f;
 
         if (Gdx.input.isTouched()){
-            Vector2 touchLocation = new Vector2(Gdx.input.getX(), Math.abs(Gdx.input.getY() - TurretGame.SCREENHEIGHT));
-
+            Vector2 touchLocation = new Vector2(Gdx.input.getX(), screen.getPixelScreenHeight() - Gdx.input.getY());
+            Debug.log("Mouse", touchLocation.x + " " + touchLocation.y);
+            heading = (float)getAngle(touchLocation);
         } else {
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
                 translateX(MOVE_SPEED * delta);
@@ -77,6 +78,25 @@ public class PlayerCharacter extends Sprite {
         }
 
         if (heading != -1.0f) rotateToHeading();
+    }
+
+    private double getAngle(Vector2 touchLocation) {
+        double centerX = getX() + (getWidth()/2);
+        centerX = centerX * (screen.getPixelScreenWidth()/TurretGame.SCREEN_WIDTH);
+
+        double centerY = getY() + (getHeight()/2);
+        centerY = centerY * (screen.getPixelScreenHeight()/TurretGame.SCREEN_HEIGHT);
+
+        double deltaX = centerX - touchLocation.x;
+        double deltaY = centerY - touchLocation.y;
+        double result = Math.toDegrees(Math.atan2(deltaY, deltaX));
+
+        if (result < 0) result += 360.0;
+        result += 90;
+        if (result >= 360.0) result -= 360.0;
+
+        Debug.log("angle", (float) result);
+        return result;
     }
 
     private void rotateToHeading(){

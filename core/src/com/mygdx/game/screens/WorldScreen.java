@@ -5,8 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -36,7 +34,7 @@ public class WorldScreen implements Screen {
         debugView = new Debug(game.batch);
 
         camera = new OrthographicCamera();
-        viewport = new FitViewport(TurretGame.SCREENWIDTH, TurretGame.SCREENHEIGHT, camera);
+        viewport = new FitViewport(TurretGame.SCREEN_WIDTH, TurretGame.SCREEN_HEIGHT, camera);
         Gdx.app.log("dimensions", viewport.getWorldWidth() + " : "+ viewport.getWorldHeight());
 
         player = new PlayerCharacter(this);
@@ -85,7 +83,7 @@ public class WorldScreen implements Screen {
         renderer.setView(camera);
 
         if (TurretGame.debug){
-            debugView.update(dt);
+            debugView.update();
         }
     }
 
@@ -104,6 +102,14 @@ public class WorldScreen implements Screen {
     public void resize(int width, int height) {
         //do something with a viewport
         viewport.update(width,height);
+    }
+
+    public int getPixelScreenHeight(){
+        return viewport.getScreenHeight();
+    }
+
+    public int getPixelScreenWidth(){
+        return viewport.getScreenWidth();
     }
 
     @Override
