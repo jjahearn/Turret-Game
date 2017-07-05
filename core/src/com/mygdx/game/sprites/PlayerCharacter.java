@@ -28,7 +28,6 @@ public class PlayerCharacter extends Sprite {
     public void update(float dt){
         delta = dt;
         handleInput();
-        stayOnScreen();
         if (getRotation() >= 360.0f) rotate(-360.0f);
         if (getRotation() < 0.0f) rotate(360.0f);
         Debug.log("rotation", getRotation());
@@ -48,6 +47,9 @@ public class PlayerCharacter extends Sprite {
 
         if (Gdx.input.isTouched()){
             Vector2 touchLocation = new Vector2(Gdx.input.getX(), screen.getPixelScreenHeight() - Gdx.input.getY());
+            touchLocation.x /= (screen.getPixelScreenWidth()/TurretGame.SCREEN_WIDTH);
+            touchLocation.y /= (screen.getPixelScreenHeight()/TurretGame.SCREEN_HEIGHT);
+
             Debug.log("Mouse", touchLocation.x + " " + touchLocation.y);
             if (!intersects(touchLocation)){
                 heading = (float)getAngle(touchLocation);
@@ -55,23 +57,19 @@ public class PlayerCharacter extends Sprite {
 
         } else {
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-//                translateX(MOVE_SPEED * delta);
                 heading = 270.0f;
                 right = true;
             }
             else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-//                translateX(-MOVE_SPEED * delta);
                 heading = 90.0f;
                 left = true;
             }
             if (Gdx.input.isKeyPressed(Input.Keys.UP)){
-//                translateY(MOVE_SPEED * delta);
                 if (right) heading = 315.0f;
                 else if (left) heading = 45.0f;
                 else heading = 0.0f;
             }
             else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-//                translateY(-MOVE_SPEED * delta);
                 if (right) heading = 225.0f;
                 else if (left) heading = 135.0f;
                 else heading = 180.0f;
@@ -82,15 +80,15 @@ public class PlayerCharacter extends Sprite {
         if (heading != -1.0f) moveTowards(heading);
     }
 
-    private double getAngle(Vector2 touchLocation) {
-        double centerX = getX() + (getWidth()/2);
-        centerX = centerX * (screen.getPixelScreenWidth()/TurretGame.SCREEN_WIDTH);
+    public Vector2 getCenter(){
+        return new Vector2(getX() + getWidth() / 2, getY() + (getHeight()/2));
+    }
 
-        double centerY = getY() + (getHeight()/2);
-        centerY = centerY * (screen.getPixelScreenHeight()/TurretGame.SCREEN_HEIGHT);
+    private double getAngle(Vector2 point) {
+        Vector2 center = getCenter();
 
-        double deltaX = centerX - touchLocation.x;
-        double deltaY = centerY - touchLocation.y;
+        double deltaX = center.x - point.x;
+        double deltaY = center.y - point.y;
         double result = Math.toDegrees(Math.atan2(deltaY, deltaX));
 
         if (result < 0) result += 360.0;
@@ -102,6 +100,23 @@ public class PlayerCharacter extends Sprite {
     }
 
     private void moveTowards(float heading){
+        Vector2 movementOffset = getMovementOffset(heading);
+        Vector2 movementActual = new Vector2(movementOffset.x * MOVE_SPEED * delta,
+                                             movementOffset.y * MOVE_SPEED * delta);
+
+        collide(movementActual);
+
+        translateX(movementActual.x);
+        translateY(movementActual.y);
+        stayOnScreen();
+        rotateToHeading(heading);
+    }
+
+    private void collide(Vector2 movementActual){
+
+    }
+
+    private Vector2 getMovementOffset(float heading) {
         Vector2 movementOffset = new Vector2(0.0f, 0.0f);
 
         movementOffset.y = heading;
@@ -117,10 +132,7 @@ public class PlayerCharacter extends Sprite {
 
         Debug.log("yoffset", movementOffset.y);
         Debug.log("xoffset", movementOffset.x);
-
-        translateX(movementOffset.x * MOVE_SPEED * delta);
-        translateY(movementOffset.y * MOVE_SPEED * delta);
-        rotateToHeading(heading);
+        return movementOffset;
     }
 
     private void rotateToHeading(float heading){
@@ -136,10 +148,8 @@ public class PlayerCharacter extends Sprite {
     }
 
     private boolean intersects(Vector2 point){
-        float pointX = point.x / (screen.getPixelScreenWidth()/TurretGame.SCREEN_WIDTH);
-        float pointY = point.y / (screen.getPixelScreenHeight()/TurretGame.SCREEN_HEIGHT);
-        if (pointX > getX() && pointX < getX() + getWidth()){
-            if (pointY > getY() && pointY < getY() + getHeight()) {
+        if (point.x > getX() && point.x < getX() + getWidth()){
+            if (point.y > getY() && point.y < getY() + getHeight()) {
                 return true;
             }
         }

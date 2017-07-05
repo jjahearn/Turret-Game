@@ -57,7 +57,6 @@ public class WorldScreen implements Screen {
         update(delta);
 
         //clear screen then draw
-//        Gdx.gl.glClearColor(0.1058f, 0.1333f, 0.1490f, 1);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -88,7 +87,6 @@ public class WorldScreen implements Screen {
     }
 
 
-    //ideally delegated to some sort of universal controller class at some point. fine for now
     private void handleInput(float dt) {
         if ((Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) ||
                 Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT)) &&

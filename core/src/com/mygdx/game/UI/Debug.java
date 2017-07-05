@@ -11,8 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.StringBuilder;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -49,7 +47,6 @@ public class Debug implements Disposable {
 
     private static void add(String name, String value){
         Label label = new Label(name + " : " + value, new Label.LabelStyle(new BitmapFont(), Color.PINK));
-        label.setAlignment(Align.left);
         metrics.put(name, label);
         table.add(metrics.get(name)).padLeft(3);
         table.row();
