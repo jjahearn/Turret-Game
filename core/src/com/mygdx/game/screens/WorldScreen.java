@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.TurretGame;
 import com.mygdx.game.UI.Debug;
+import com.mygdx.game.Utils.TileMapBuilder;
 import com.mygdx.game.sprites.PlayerCharacter;
 
 
@@ -25,6 +26,7 @@ public class WorldScreen implements Screen {
     private TmxMapLoader mapLoader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
+    private TileMapBuilder mapObjects;
 
     private Debug debugView;
 
@@ -108,6 +110,10 @@ public class WorldScreen implements Screen {
 
     public int getPixelScreenWidth(){
         return viewport.getScreenWidth();
+    }
+
+    public TiledMap getMap(){
+        return map;
     }
 
     @Override

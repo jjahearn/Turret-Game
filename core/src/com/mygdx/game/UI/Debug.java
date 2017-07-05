@@ -35,9 +35,6 @@ public class Debug implements Disposable {
         table.align(Align.topLeft);
         table.setFillParent(true);
         stage.addActor(table);
-
-        log("fps", Gdx.graphics.getFramesPerSecond());
-
     }
 
     public void update(){
