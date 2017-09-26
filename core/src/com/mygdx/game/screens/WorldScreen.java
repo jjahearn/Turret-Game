@@ -3,16 +3,22 @@ package com.mygdx.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.TurretGame;
 import com.mygdx.game.UI.Debug;
-import com.mygdx.game.Utils.TileMapBuilder;
+import com.mygdx.game.Utils.TiledMapObjects;
 import com.mygdx.game.sprites.PlayerCharacter;
 
 
@@ -26,7 +32,7 @@ public class WorldScreen implements Screen {
     private TmxMapLoader mapLoader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
-    private TileMapBuilder mapObjects;
+    private TiledMapObjects mapObjects;
 
     private Debug debugView;
 
@@ -44,8 +50,17 @@ public class WorldScreen implements Screen {
         mapLoader = new TmxMapLoader();
         map = mapLoader.load("testmap.tmx");
         renderer = new OrthogonalTiledMapRenderer(map);
+        mapObjects = new TiledMapObjects(this);
 
         camera.position.set(viewport.getWorldWidth()/2, viewport.getWorldHeight()/2, 0);
+    }
+
+    public TiledMapObjects getMapObjects(){
+        return mapObjects;
+    }
+
+    public TiledMapObjects getMapObjectsNear(Vector2 location){
+        return mapObjects;
     }
 
     @Override
@@ -73,6 +88,19 @@ public class WorldScreen implements Screen {
         if (TurretGame.debug){
             game.batch.setProjectionMatrix(debugView.stage.getCamera().combined);
             debugView.stage.draw();
+            ShapeRenderer shapeRenderer = new ShapeRenderer();
+            shapeRenderer.setColor(Color.PINK);
+            shapeRenderer.setProjectionMatrix(camera.combined);
+            for (RectangleMapObject object : mapObjects.getWalls()){
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                Rectangle rectangle = object.getRectangle();
+                shapeRenderer.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+                shapeRenderer.end();
+            }
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            Rectangle collisionBox = player.getCollisionBox();
+            shapeRenderer.rect(collisionBox.x, collisionBox.y, collisionBox.width, collisionBox.height);
+            shapeRenderer.end();
         }
     }
 

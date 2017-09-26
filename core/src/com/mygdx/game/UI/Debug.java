@@ -37,9 +37,8 @@ public class Debug implements Disposable {
         stage.addActor(table);
     }
 
-    public void update(){
+    public void update() {
         log("fps", Gdx.graphics.getFramesPerSecond());
-
     }
 
     private static void add(String name, String value){

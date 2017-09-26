@@ -1,7 +1,7 @@
 package com.mygdx.game;
 
 /**
- * class to hold variables relevant to one save file instance of the game
+ * class to store variables relevant to one save file instance of the game
  */
 
 public class SaveData{ //will most likely implement serializable

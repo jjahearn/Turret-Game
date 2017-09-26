@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.TurretGame;
 import com.mygdx.game.UI.Debug;
@@ -11,11 +14,13 @@ import com.mygdx.game.screens.WorldScreen;
 
 
 public class PlayerCharacter extends Sprite {
-    private static final float MOVE_SPEED = 250.0f;
+    private static final float MOVE_SPEED = 150.0f;
     private static final float ROTATION_SPEED = 230.0f;
+    private static final float COLLISION_OFFSET = 4f;
 
     private WorldScreen screen;
     private float delta;
+
 
     public PlayerCharacter(WorldScreen screen){
         super(new Texture("playerplaceholder.png"));
@@ -31,6 +36,15 @@ public class PlayerCharacter extends Sprite {
         if (getRotation() >= 360.0f) rotate(-360.0f);
         if (getRotation() < 0.0f) rotate(360.0f);
         Debug.log("rotation", getRotation());
+    }
+
+    public Rectangle getCollisionBox(){
+        float scale = getWidth() / COLLISION_OFFSET;
+        Rectangle rect = new Rectangle(getX()+ scale,
+                                       getY()+ scale,
+                                       getWidth()- scale*2,
+                                       getHeight()- scale*2);
+        return rect;
     }
 
     private void stayOnScreen() {
@@ -104,16 +118,51 @@ public class PlayerCharacter extends Sprite {
         Vector2 movementActual = new Vector2(movementOffset.x * MOVE_SPEED * delta,
                                              movementOffset.y * MOVE_SPEED * delta);
 
-        collide(movementActual);
+//        collide(movementActual);
 
         translateX(movementActual.x);
         translateY(movementActual.y);
         stayOnScreen();
+        collide();
         rotateToHeading(heading);
     }
 
-    private void collide(Vector2 movementActual){
+    private void collide(){
+        for (RectangleMapObject object : screen.getMapObjects().getWalls()){
+            Rectangle box = object.getRectangle();
+            if (Intersector.overlaps(box, getCollisionBox())){
+                float boxRightBound = box.getX() + box.getWidth();
+                float boxUpperBound = box.getY() + box.getHeight();
 
+                //collide right
+                if (box.x < (getCollisionBox().x + getCollisionBox().width) && getCenter().x < box.x) {
+                    if (getCollisionBox().y != boxUpperBound && getCollisionBox().y + getCollisionBox().height != box.y){
+                        translateX(box.x - (getCollisionBox().x + getCollisionBox().width));
+                    }
+                }
+
+                //collide left
+                if (boxRightBound > getCollisionBox().x && getCenter().x > boxRightBound){
+                    if(getCollisionBox().y != boxUpperBound && getCollisionBox().y + getCollisionBox().height != box.y){
+                        translateX(boxRightBound - getCollisionBox().x);
+                    }
+                }
+
+                //collide up
+                if (box.y < (getCollisionBox().y + getCollisionBox().height) && getCenter().y < box.y){
+                    if (getCollisionBox().x != boxRightBound && getCollisionBox().x+getCollisionBox().width != box.x) {
+                        translateY(box.y - (getCollisionBox().y + getCollisionBox().height));
+                    }
+                }
+                //collide down
+                if (boxUpperBound > getCollisionBox().y && getCenter().y > boxUpperBound){
+                    if (getCollisionBox().x != boxRightBound && getCollisionBox().x+getCollisionBox().width != box.x) {
+                        translateY(boxUpperBound - getCollisionBox().y);
+                    }
+                }
+                collisionEvent(object);
+            }
+        }
     }
 
     private Vector2 getMovementOffset(float heading) {
@@ -154,5 +203,9 @@ public class PlayerCharacter extends Sprite {
             }
         }
         return false;
+    }
+
+    public void collisionEvent(RectangleMapObject object) {
+
     }
 }
