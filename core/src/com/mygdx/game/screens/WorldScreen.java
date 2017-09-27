@@ -11,9 +11,11 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.TurretGame;
@@ -88,19 +90,25 @@ public class WorldScreen implements Screen {
         if (TurretGame.debug){
             game.batch.setProjectionMatrix(debugView.stage.getCamera().combined);
             debugView.stage.draw();
-            ShapeRenderer shapeRenderer = new ShapeRenderer();
-            shapeRenderer.setColor(Color.PINK);
-            shapeRenderer.setProjectionMatrix(camera.combined);
+            game.shapes.setColor(Color.LIME);
+            game.shapes.setProjectionMatrix(camera.combined);
+            game.shapes.begin(ShapeRenderer.ShapeType.Line);
             for (RectangleMapObject object : mapObjects.getWalls()){
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
                 Rectangle rectangle = object.getRectangle();
-                shapeRenderer.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-                shapeRenderer.end();
+                game.shapes.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
             }
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            Rectangle collisionBox = player.getCollisionBox();
-            shapeRenderer.rect(collisionBox.x, collisionBox.y, collisionBox.width, collisionBox.height);
-            shapeRenderer.end();
+            game.shapes.end();
+
+            game.shapes.begin(ShapeRenderer.ShapeType.Filled);
+            game.shapes.setColor(Color.PINK);
+            Circle collisionCircle = player.getCollisionCircle();
+            game.shapes.circle(collisionCircle.x,collisionCircle.y, collisionCircle.radius);
+            game.shapes.setColor(Color.CYAN);
+            game.shapes.circle(collisionCircle.x - (collisionCircle.radius), collisionCircle.y, collisionCircle.radius/4);
+            game.shapes.circle(collisionCircle.x, collisionCircle.y - (collisionCircle.radius), collisionCircle.radius/4);
+            game.shapes.circle(collisionCircle.x + (collisionCircle.radius), collisionCircle.y, collisionCircle.radius/4);
+            game.shapes.circle(collisionCircle.x, collisionCircle.y + (collisionCircle.radius), collisionCircle.radius/4);
+            game.shapes.end();
         }
     }
 

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -45,6 +46,12 @@ public class PlayerCharacter extends Sprite {
                                        getWidth()- scale*2,
                                        getHeight()- scale*2);
         return rect;
+    }
+
+    public Circle getCollisionCircle(){
+        float scale = getWidth() / COLLISION_OFFSET;
+        Vector2 center = getCenter();
+        return new Circle(center.x, center.y, scale);
     }
 
     private void stayOnScreen() {
@@ -118,8 +125,6 @@ public class PlayerCharacter extends Sprite {
         Vector2 movementActual = new Vector2(movementOffset.x * MOVE_SPEED * delta,
                                              movementOffset.y * MOVE_SPEED * delta);
 
-//        collide(movementActual);
-
         translateX(movementActual.x);
         translateY(movementActual.y);
         stayOnScreen();
@@ -130,40 +135,74 @@ public class PlayerCharacter extends Sprite {
     private void collide(){
         for (RectangleMapObject object : screen.getMapObjects().getWalls()){
             Rectangle box = object.getRectangle();
-            if (Intersector.overlaps(box, getCollisionBox())){
-                float boxRightBound = box.getX() + box.getWidth();
-                float boxUpperBound = box.getY() + box.getHeight();
-
-                //collide right
-                if (box.x < (getCollisionBox().x + getCollisionBox().width) && getCenter().x < box.x) {
-                    if (getCollisionBox().y != boxUpperBound && getCollisionBox().y + getCollisionBox().height != box.y){
-                        translateX(box.x - (getCollisionBox().x + getCollisionBox().width));
-                    }
-                }
-
+            Circle circle = getCollisionCircle();
+            if (Intersector.overlaps(circle, box)){
                 //collide left
-                if (boxRightBound > getCollisionBox().x && getCenter().x > boxRightBound){
-                    if(getCollisionBox().y != boxUpperBound && getCollisionBox().y + getCollisionBox().height != box.y){
-                        translateX(boxRightBound - getCollisionBox().x);
-                    }
+                if (box.contains(circle.x - circle.radius, circle.y)){
+                    translateX((box.x + box.width) - (circle.x - circle.radius));
+                    circle = getCollisionCircle();
                 }
-
+                //collide right
+                if (box.contains(circle.x + circle.radius, circle.y)){
+                    translateX(box.x - (circle.x + circle.radius));
+                    circle = getCollisionCircle();
+                }
                 //collide up
-                if (box.y < (getCollisionBox().y + getCollisionBox().height) && getCenter().y < box.y){
-                    if (getCollisionBox().x != boxRightBound && getCollisionBox().x+getCollisionBox().width != box.x) {
-                        translateY(box.y - (getCollisionBox().y + getCollisionBox().height));
-                    }
+                if (box.contains(circle.x, circle.y + circle.radius)){
+                    translateY(box.y - (circle.y + circle.radius));
+                    circle = getCollisionCircle();
                 }
                 //collide down
-                if (boxUpperBound > getCollisionBox().y && getCenter().y > boxUpperBound){
-                    if (getCollisionBox().x != boxRightBound && getCollisionBox().x+getCollisionBox().width != box.x) {
-                        translateY(boxUpperBound - getCollisionBox().y);
-                    }
+                if (box.contains(circle.x, circle.y - circle.radius)){
+                    translateY((box.y + box.height) - (circle.y - circle.radius));
+                    circle = getCollisionCircle();
                 }
+
+
+                Debug.log("box", (box.x + box.width));
+                Debug.log("circ", (getCollisionCircle().x - getCollisionCircle().radius));
                 collisionEvent(object);
             }
         }
     }
+
+//    private void collide(){
+//        for (RectangleMapObject object : screen.getMapObjects().getWalls()){
+//            Rectangle box = object.getRectangle();
+//            if (Intersector.overlaps(box, getCollisionBox())){
+//                float boxRightBound = box.getX() + box.getWidth();
+//                float boxUpperBound = box.getY() + box.getHeight();
+//
+//                //collide right
+//                if (box.x < (getCollisionBox().x + getCollisionBox().width) && getCenter().x < box.x) {
+//                    if (getCollisionBox().y != boxUpperBound && getCollisionBox().y + getCollisionBox().height != box.y){
+//                        translateX(box.x - (getCollisionBox().x + getCollisionBox().width));
+//                    }
+//                }
+//
+//                //collide left
+//                if (boxRightBound > getCollisionBox().x && getCenter().x > boxRightBound){
+//                    if(getCollisionBox().y != boxUpperBound && getCollisionBox().y + getCollisionBox().height != box.y){
+//                        translateX(boxRightBound - getCollisionBox().x);
+//                    }
+//                }
+//
+//                //collide up
+//                if (box.y < (getCollisionBox().y + getCollisionBox().height) && getCenter().y < box.y){
+//                    if (getCollisionBox().x != boxRightBound && getCollisionBox().x+getCollisionBox().width != box.x) {
+//                        translateY(box.y - (getCollisionBox().y + getCollisionBox().height));
+//                    }
+//                }
+//                //collide down
+//                if (boxUpperBound > getCollisionBox().y && getCenter().y > boxUpperBound){
+//                    if (getCollisionBox().x != boxRightBound && getCollisionBox().x+getCollisionBox().width != box.x) {
+//                        translateY(boxUpperBound - getCollisionBox().y);
+//                    }
+//                }
+//                collisionEvent(object);
+//            }
+//        }
+//    }
 
     private Vector2 getMovementOffset(float heading) {
         Vector2 movementOffset = new Vector2(0.0f, 0.0f);
