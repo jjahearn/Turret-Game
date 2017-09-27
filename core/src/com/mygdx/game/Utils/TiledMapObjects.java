@@ -1,10 +1,8 @@
 package com.mygdx.game.Utils;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.screens.WorldScreen;
 
 import java.util.ArrayList;

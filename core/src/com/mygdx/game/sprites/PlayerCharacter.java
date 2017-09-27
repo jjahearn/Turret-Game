@@ -39,15 +39,6 @@ public class PlayerCharacter extends Sprite {
         Debug.log("rotation", getRotation());
     }
 
-    public Rectangle getCollisionBox(){
-        float scale = getWidth() / COLLISION_OFFSET;
-        Rectangle rect = new Rectangle(getX()+ scale,
-                                       getY()+ scale,
-                                       getWidth()- scale*2,
-                                       getHeight()- scale*2);
-        return rect;
-    }
-
     public Circle getCollisionCircle(){
         float scale = getWidth() / COLLISION_OFFSET;
         Vector2 center = getCenter();
@@ -72,7 +63,7 @@ public class PlayerCharacter extends Sprite {
             touchLocation.y /= (screen.getPixelScreenHeight()/TurretGame.SCREEN_HEIGHT);
 
             Debug.log("Mouse", touchLocation.x + " " + touchLocation.y);
-            if (!intersects(touchLocation)){
+            if (!getCollisionCircle().contains(touchLocation)){
                 heading = (float)getAngle(touchLocation);
             }
 
@@ -157,10 +148,6 @@ public class PlayerCharacter extends Sprite {
                     translateY((box.y + box.height) - (circle.y - circle.radius));
                     circle = getCollisionCircle();
                 }
-
-
-                Debug.log("box", (box.x + box.width));
-                Debug.log("circ", (getCollisionCircle().x - getCollisionCircle().radius));
                 collisionEvent(object);
             }
         }
