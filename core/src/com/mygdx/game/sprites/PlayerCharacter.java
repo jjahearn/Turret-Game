@@ -4,13 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.TurretGame;
 import com.mygdx.game.UI.Debug;
+import com.mygdx.game.Map2d.MapEntity;
 import com.mygdx.game.screens.WorldScreen;
 
 
@@ -124,8 +124,8 @@ public class PlayerCharacter extends Sprite {
     }
 
     private void collide(){
-        for (RectangleMapObject object : screen.getMapObjects().getWalls()){
-            Rectangle box = object.getRectangle();
+        for (MapEntity entity : screen.getMapObjects().getEntities()){
+            Rectangle box = entity.getRectangle();
             Circle circle = getCollisionCircle();
             if (Intersector.overlaps(circle, box)){
                 //collide left
@@ -148,7 +148,7 @@ public class PlayerCharacter extends Sprite {
                     translateY((box.y + box.height) - (circle.y - circle.radius));
                     circle = getCollisionCircle();
                 }
-                collisionEvent(object);
+                collisionEvent(entity);
             }
         }
     }
@@ -231,7 +231,11 @@ public class PlayerCharacter extends Sprite {
         return false;
     }
 
-    public void collisionEvent(RectangleMapObject object) {
+    public void collisionEvent(MapEntity entity) {
+        entity.touched(this);
+    }
 
+    public void climb(){
+        screen.climb();
     }
 }
