@@ -92,6 +92,11 @@ public class WorldScreen implements Screen {
         if (TurretGame.debug){
             drawDebug();
         }
+
+        if (testCollision){
+            game.setScreen(new BattleScreen(game));
+            dispose();
+        }
     }
 
     private void drawDebug() {
