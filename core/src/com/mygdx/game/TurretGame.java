@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.game.screens.WorldScreen;
 
@@ -12,12 +13,14 @@ public class TurretGame extends Game {
     public static final int SCREEN_HEIGHT = 480;
 
     public boolean debug;
-    public SpriteBatch batch;
+    public SpriteBatch spriteBatch;
     public ShapeRenderer shapes;
+    public ModelBatch modelBatch;
 
 	@Override
     public void create () {
-        batch = new SpriteBatch();
+        spriteBatch = new SpriteBatch();
+        modelBatch = new ModelBatch();
         shapes = new ShapeRenderer();
         debug = false;
         setScreen(new WorldScreen(this));
@@ -42,7 +45,8 @@ public class TurretGame extends Game {
 	@Override
 	public void dispose () {
         super.dispose();
-        batch.dispose();
+        spriteBatch.dispose();
+        modelBatch.dispose();
         shapes.dispose();
 	}
 }

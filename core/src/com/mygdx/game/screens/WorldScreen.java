@@ -1,7 +1,6 @@
 package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -41,7 +40,7 @@ public class WorldScreen implements Screen {
     //takes game as an argument in order to interact with our singleton spritebatch object
     public WorldScreen(TurretGame game){
         this.game = game;
-        debugView = new Debug(game.batch);
+        debugView = new Debug(game.spriteBatch);
         ladderCollision = false;
 
         camera = new OrthographicCamera();
@@ -80,11 +79,11 @@ public class WorldScreen implements Screen {
 
         //draw things
         renderer.render();
-        game.batch.setProjectionMatrix(camera.combined);
-        game.batch.begin();
-//        frogBall.draw(game.batch);
-        player.draw(game.batch);
-        game.batch.end();
+        game.spriteBatch.setProjectionMatrix(camera.combined);
+        game.spriteBatch.begin();
+//        frogBall.draw(game.spriteBatch);
+        player.draw(game.spriteBatch);
+        game.spriteBatch.end();
 
         if (game.debug) drawDebug();
 
@@ -95,7 +94,7 @@ public class WorldScreen implements Screen {
     }
 
     private void drawDebug() {
-        game.batch.setProjectionMatrix(debugView.stage.getCamera().combined);
+        game.spriteBatch.setProjectionMatrix(debugView.stage.getCamera().combined);
         debugView.stage.draw();
 
         game.shapes.setProjectionMatrix(camera.combined);
