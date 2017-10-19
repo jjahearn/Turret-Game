@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -35,7 +34,7 @@ public class WorldScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     private TiledMapObjects mapObjects;
 
-    private boolean testCollision;
+    private boolean ladderCollision;
 
     private Debug debugView;
 
@@ -43,7 +42,7 @@ public class WorldScreen implements Screen {
     public WorldScreen(TurretGame game){
         this.game = game;
         debugView = new Debug(game.batch);
-        testCollision = false;
+        ladderCollision = false;
 
         camera = new OrthographicCamera();
         viewport = new FitViewport(TurretGame.SCREEN_WIDTH, TurretGame.SCREEN_HEIGHT, camera);
@@ -77,8 +76,6 @@ public class WorldScreen implements Screen {
         //game logic
         update(delta);
 
-        //clear screen then draw
-        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //draw things
@@ -89,11 +86,9 @@ public class WorldScreen implements Screen {
         player.draw(game.batch);
         game.batch.end();
 
-        if (TurretGame.debug){
-            drawDebug();
-        }
+        if (game.debug) drawDebug();
 
-        if (testCollision){
+        if (ladderCollision){
             game.setScreen(new BattleScreen(game));
             dispose();
         }
@@ -102,13 +97,14 @@ public class WorldScreen implements Screen {
     private void drawDebug() {
         game.batch.setProjectionMatrix(debugView.stage.getCamera().combined);
         debugView.stage.draw();
+
         game.shapes.setProjectionMatrix(camera.combined);
         game.shapes.begin(ShapeRenderer.ShapeType.Line);
         game.shapes.setAutoShapeType(true);
 
         for (MapEntity entity : mapObjects.getEntities()) {
             if (entity.getType().equals("ladder")) {
-                if (testCollision) game.shapes.set(ShapeRenderer.ShapeType.Filled);
+                if (ladderCollision) game.shapes.set(ShapeRenderer.ShapeType.Filled);
                 game.shapes.setColor(Color.RED);
             } else {
                 game.shapes.setColor(Color.LIME);
@@ -132,26 +128,13 @@ public class WorldScreen implements Screen {
 
     //main logic for this screen. move things, handle input.
     private void update(float dt){
-        testCollision = false;
+        ladderCollision = false;
 
-        handleInput(dt);
         player.update(dt);
         camera.update();
         renderer.setView(camera);
 
-        if (TurretGame.debug){
-            debugView.update();
-        }
-    }
-
-
-    private void handleInput(float dt) {
-        if ((Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) ||
-                Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT)) &&
-                Gdx.input.isKeyJustPressed(Input.Keys.D)){
-            TurretGame.debug = !TurretGame.debug;
-            Gdx.app.log("debug state ", "" + TurretGame.debug);
-        }
+        if (game.debug) debugView.update();
     }
 
     @Override
@@ -174,7 +157,7 @@ public class WorldScreen implements Screen {
 
     public void climb(){
         //screen transition to battle
-        testCollision = true;
+        ladderCollision = true;
     }
 
     @Override

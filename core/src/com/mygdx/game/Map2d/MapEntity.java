@@ -22,6 +22,6 @@ public abstract class MapEntity {
     }
 
     public String getType(){
-        return mapObject.getProperties().get("type", String.class);
+        return mapObject.getProperties().get(TiledMapObjects.STRING_TYPE, String.class);
     }
 }

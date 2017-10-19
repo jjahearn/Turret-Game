@@ -14,6 +14,10 @@ public class TiledMapObjects {
     private ArrayList<MapEntity> entities;
     private TiledMap map;
 
+    public static final String STRING_TYPE = "type";
+    public static final String STRING_WALL = "wall";
+    public static final String STRING_LADDER = "ladder";
+
     public TiledMapObjects(WorldScreen screen){
         map = screen.getMap();
         entities = new ArrayList<MapEntity>();
@@ -24,10 +28,10 @@ public class TiledMapObjects {
         for(MapLayer layer : map.getLayers()){
             for(MapObject object : layer.getObjects()){
                 RectangleMapObject obj = (RectangleMapObject) object;
-                String type = obj.getProperties().get("type", String.class);
+                String type = obj.getProperties().get(STRING_TYPE, String.class);
 
-                if(type.equals("wall")) entities.add(new Wall(obj));
-                if(type.equals("ladder")) entities.add(new Ladder(obj));
+                if(type.equals(STRING_WALL)) entities.add(new Wall(obj));
+                if(type.equals(STRING_LADDER)) entities.add(new Ladder(obj));
             }
         }
     }
