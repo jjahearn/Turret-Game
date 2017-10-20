@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.TurretGame;
 import com.mygdx.game.UI.Debug;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
@@ -27,6 +28,7 @@ public class BattleScreen implements Screen {
     private Debug debugView;
     private Model model;
     private ModelInstance testBox;
+    private ModelInstance[] testBoxes;
     private Environment environment;
     private PerspectiveCamera camera;
     private CameraInputController cameraControl;
@@ -35,7 +37,7 @@ public class BattleScreen implements Screen {
         this.game = game;
         debugView = new Debug(game.spriteBatch);
         CameraSetup();
-        CreateTestBox();
+        CreateTestBoxes();
         BuildEnvironment();
         cameraControl = new CameraInputController(camera);
         Gdx.input.setInputProcessor(cameraControl);
@@ -47,17 +49,24 @@ public class BattleScreen implements Screen {
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
     }
 
-    private void CreateTestBox() {
+    private void CreateTestBoxes() {
         ModelBuilder modelBuilder = new ModelBuilder();
         model = modelBuilder.createBox(5f,5f,5f,
                 new Material(ColorAttribute.createDiffuse(Color.GREEN)),
                 Usage.Position | Usage.Normal);
         testBox = new ModelInstance(model);
+        testBoxes = new ModelInstance[6];
+        testBoxes[0] = new ModelInstance(model, new Matrix4().translate(30f, 0, 0));
+        testBoxes[1] = new ModelInstance(model, new Matrix4().translate(0, 0, -30f));
+        testBoxes[2] = new ModelInstance(model, new Matrix4().translate(0, 0, 30f));
+        testBoxes[3] = new ModelInstance(model, new Matrix4().translate(0, 30f, 0));
+        testBoxes[4] = new ModelInstance(model, new Matrix4().translate(0, -30f, 0));
+        testBoxes[5] = new ModelInstance(model, new Matrix4().translate(-30f, 0, 0));
     }
 
     private void CameraSetup() {
         camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.position.set(0f, 0f, 10f);
+        camera.position.set(0f, 0f, 0f);
         camera.lookAt(0,0,0);
         camera.near = 1f;
         camera.far = 300f;
@@ -78,6 +87,9 @@ public class BattleScreen implements Screen {
 
         game.modelBatch.begin(camera);
         game.modelBatch.render(testBox, environment);
+        for (ModelInstance box : testBoxes){
+            game.modelBatch.render(box, environment);
+        }
         game.modelBatch.end();
 
         if (game.debug) drawDebug();
@@ -89,8 +101,8 @@ public class BattleScreen implements Screen {
     }
 
     private void update(float delta){
-
         testBox.transform.rotate(0f,5f, 0f, 20f*delta);
+        testBox.transform.translate(0,0,-10f*delta);
 
         if (game.debug){
             debugView.update();
