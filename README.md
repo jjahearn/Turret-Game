@@ -10,3 +10,4 @@
 
 -debug system that can be added to easily, tracking changes to variables in real time
 
+![captured gif](https://github.com/jjahearn/Turret-Game/blob/master/cap3.gif)
