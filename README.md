@@ -1,6 +1,6 @@
 # Turret-Game
 
-2017
+2017, Java using libGDX
 
 -entity moves toward cursor on click, moving with a fixed turning radius. 
 
