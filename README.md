@@ -2,7 +2,7 @@
 
 2017
 
--entity moves toward cursor, moving with a fixed turning radius. 
+-entity moves toward cursor on click, moving with a fixed turning radius. 
 
 -collision detection, custom collision points on entity. 
 
